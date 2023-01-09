@@ -1,7 +1,12 @@
 # nightscout-python-monitor
 Un monitor in python che si basa su nightscout e GUIZero. 
 Hardware necessario un raspberry pi (almeno il 3) e un monitor gpio/hdmi da 5 pollici con touchscreen.
-Software necessario python versione 3 con GUIZero installato.
+Software necessario Raspberry Pi OS.
+
+Applicazioni necessarie:
+
+sudo apt-get install python3 python3-pip git python3-tk python3-dateutil
+sudo pip3 install guizero
 
 Nel file monitor.py bisogna mettere HOST-NIGHTSCOUT e TOKEN relativi al proprio nightscout nelle prime righe nonchè il nome del proprio utente e la cartella (rigorosamente nella cartella root del proprio utente) dove risiede il programma.
 

@@ -15,9 +15,13 @@ Foto1: nuova versione in fase di sviluppo
 
 ![Screenshot](screenshot.png)
 
-Foto2: valore con allarme
+Foto2: monitor con allarme
 
 ![Screenshot](screenshot3.png)
+
+Foto3: monitor con allarme silenziato
+
+![Screenshot](screenshot4.png)
 
 Foto3: vecchia versione
 

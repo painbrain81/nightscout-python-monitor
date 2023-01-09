@@ -6,7 +6,7 @@ Nel file monitor.py bisogna mettere HOST-NIGHTSCOUT e TOKEN relativi al proprio 
 
 L'impaginazione è adeguata per un monitor con risoluzione 800x480.
 
-Il tasto "silenza" mette in pausa gli allarmi per un tempo predeterminato (funzione non ancora disponibile)
+Il tasto "silenza" mette in pausa gli allarmi per un tempo predeterminato.
 
 Foto1: nuova versione in fase di sviluppo
 

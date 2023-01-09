@@ -11,7 +11,13 @@ tspenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token
 valueultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==1{print $1; exit}'"
 valuepenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==2{print $1; exit}'"
 
+snooze=0
+alarm=0
+
 def glice():
+
+	global snooze #prendo le variabili globali
+	global alarm
 
 #	orario attuale e minuti da ultima lettura
 
@@ -37,12 +43,26 @@ def glice():
 
 	ultimobg=int(os.popen(valueultimo).read()) #ultima lettura glucosio
 	lastbg=f"{ultimobg}" #stringra ultima lettura glucosio
-	if int(lastbg)>=180: #assegnazione colore al testo se alta o bassa
+
+	if int(lastbg)>=180: #se alta o bassa assegnazione colore al testo icona dipendente da snooze
 		lastbggui.text_color=f"yellow"
+		alarm=1
+		if snooze==1:
+			imgalarm.value=f"/home/matteo/glice/bellsnooze.png"
+		else:
+			imgalarm.value=f"/home/matteo/glice/bell.png"
 	elif int(lastbg)<70:
+		alarm=1
 		lastbggui.text_color=f"red"
+		if snooze==1:
+			imgalarm.value=f"/home/matteo/glice/bellsnooze.png"
+		else:
+			imgalarm.value=f"/home/matteo/glice/bell.png"
 	else:
-		lastbggui.text_color=f"white"
+		alarm=0
+		lastbggui.text_color=f"green"
+		imgalarm.value=f"/home/matteo/glice/bellblack.png"
+		snooze=0
 	penultimobg=os.popen(valuepenultimo).read() #penultima lettura glucosio
 	delta=int(ultimobg)-int(penultimobg) #calcolo differenza ultima e penultima lettura
 	if delta>=0: #aggiungi di un + se differenza positiva
@@ -70,10 +90,19 @@ def glice():
 	elif int(delta)<-19:
 		imgcur.value="/home/matteo/glice/downdowndown.png"
 	else:
-		imgcur.value=""
+		imgcur.value="/home/matteo/glice/arrowblack.png"
 
-def button(): #snooze
-	print("bottone 1 premuto")
+	return [snooze, alarm] #mando le varibili globali
+
+def button1(): #snooze
+	global snooze
+	global alarm
+	if alarm==0:
+		pass
+	else:
+		imgalarm.value=f"/home/matteo/glice/bellsnooze.png"
+		snooze=1
+	return [snooze, alarm]
 
 def button2(): #bottone di uscita
 	quit()
@@ -100,11 +129,12 @@ diffgui = Text(timebox, text="", color="white", size=30, grid=[2,1])
 #blocco pulsanti
 
 buttonbox=Box(app, width="fill",  align="bottom")
-button = PushButton(buttonbox, text="Silenzia", command=button, align="left")
+button1 = PushButton(buttonbox, text="Silenzia", command=button1, align="left")
+imgalarm =Picture(buttonbox, align="left")
 button2 = PushButton(buttonbox, text="X", command=button2, align="right")
-button.bg = "white"
+button1.bg = "white"
 button2.bg = "gray"
-button.text_size = 40
+button1.text_size = 40
 button2.text_size = 40
 
 glice()

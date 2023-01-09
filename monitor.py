@@ -137,6 +137,6 @@ button2.bg = "gray"
 button1.text_size = 40
 button2.text_size = 40
 
-glice()
+#glice()
 app.display()
 

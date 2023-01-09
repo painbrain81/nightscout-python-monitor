@@ -7,7 +7,7 @@ import time
 #parametrizzazione principale
 
 user="matteo"
-folder="glice"
+folder="nightscout-python-monitor"
 
 app = App(title="app", bg="black")
 app.full_screen = True

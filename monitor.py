@@ -74,7 +74,6 @@ def glice():
 			alarmon=0
 			lastalarm=0
 			delay=300
-			print("stop allarmi")
 
 		if int(lastbg)>=180: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
 			lastbggui.text_color=f"yellow"

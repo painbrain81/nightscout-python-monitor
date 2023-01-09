@@ -8,4 +8,7 @@ L'impaginazione è adeguata per un monitor con risoluzione 800x480.
 Il tasto "silenza" mette in pausa gli allarmi per un tempo predeterminato (funzione non ancora disponibile)
 
 ![Screenshot](screenshot.png)
+Foto1: nuova versione in fase di sviluppo
+
 ![Screenshot](screenshot2.png)
+Foto2: vecchia versione

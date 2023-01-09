@@ -12,7 +12,7 @@ folder="glice"
 app = App(title="app", bg="black")
 app.full_screen = True
 
-#sostituire HOST e TOKEN con i propri del proprio nightscout
+#sostituire HOST-NIGHTSCOUT e TOKEN con i propri del proprio nightscout
 
 tsultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $1}' | awk 'NR==1{print $1; exit}' | cut -c2- | sed 's/.$//'"
 tspenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $1}' | awk 'NR==2{print $1; exit}' | cut -c2- | sed 's/.$//'"

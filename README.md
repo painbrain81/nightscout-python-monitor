@@ -15,7 +15,11 @@ Foto1: nuova versione in fase di sviluppo
 
 ![Screenshot](screenshot.png)
 
-Foto2: vecchia versione
+Foto2: valore con allarme
+
+![Screenshot](screenshot3.png)
+
+Foto3: vecchia versione
 
 ![Screenshot](screenshot2.png)
 

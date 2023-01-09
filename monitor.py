@@ -10,14 +10,21 @@ tsultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TO
 tspenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $1}' | awk 'NR==2{print $1; exit}' | cut -c2- | sed 's/.$//'"
 valueultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==1{print $1; exit}'"
 valuepenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==2{print $1; exit}'"
+oralinux='date +"%s"'
 
+delay=300
 snooze=0
 alarm=0
+alarmon=0
+lastalarm=0
 
 def glice():
 
 	global snooze #prendo le variabili globali
 	global alarm
+	global alarmon
+	global lastalarm
+	global delay
 
 #	orario attuale e minuti da ultima lettura
 
@@ -42,27 +49,51 @@ def glice():
 #	valore di glucosio e delta con precedente
 
 	ultimobg=int(os.popen(valueultimo).read()) #ultima lettura glucosio
-	lastbg=f"{ultimobg}" #stringra ultima lettura glucosio
-
-	if int(lastbg)>=180: #se alta o bassa assegnazione colore al testo icona dipendente da snooze
-		lastbggui.text_color=f"yellow"
-		alarm=1
-		if snooze==1:
-			imgalarm.value=f"/home/matteo/glice/bellsnooze.png"
-		else:
-			imgalarm.value=f"/home/matteo/glice/bell.png"
-	elif int(lastbg)<70:
-		alarm=1
-		lastbggui.text_color=f"red"
-		if snooze==1:
-			imgalarm.value=f"/home/matteo/glice/bellsnooze.png"
-		else:
-			imgalarm.value=f"/home/matteo/glice/bell.png"
+	if int(diff)>15:
+		lastbg=f"---"
+		lastbggui.text_color="gray"
 	else:
-		alarm=0
-		lastbggui.text_color=f"green"
-		imgalarm.value=f"/home/matteo/glice/bellblack.png"
-		snooze=0
+		lastbg=f"{ultimobg}" #stringra ultima lettura glucosio
+
+		adesso=os.popen(oralinux).read() #il prossimo if è la gestione del delay degli allarmi
+		if alarm==0 and (int(lastbg)>=180 or int(lastbg)<70):
+			alarmon=os.popen(oralinux).read()
+			lastalarm=os.popen(oralinux).read()
+			suona()
+			print("prima suonata")
+		elif alarm==1 and (int(lastbg)>=180 or int(lastbg)<70):
+			diffalarm=int(adesso)-int(lastalarm)
+			if int(diffalarm)>delay:
+				suona()
+				lastalarm=os.popen(oralinux).read()
+				print("seconda suonata")
+			else:
+				pass
+		else:
+			alarmon=0
+			lastalarm=0
+			delay=300
+			print("stop allarmi")
+
+		if int(lastbg)>=180: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
+			lastbggui.text_color=f"yellow"
+			alarm=1
+			if snooze==1:
+				imgalarm.value="/home/matteo/glice/bellsnooze.png"
+			else:
+				imgalarm.value="/home/matteo/glice/bell.png"
+		elif int(lastbg)<70:
+			alarm=1
+			lastbggui.text_color="red"
+			if snooze==1:
+				imgalarm.value="/home/matteo/glice/bellsnooze.png"
+			else:
+				imgalarm.value="/home/matteo/glice/bell.png"
+		else:
+			alarm=0
+			lastbggui.text_color=f"green"
+			imgalarm.value=f"/home/matteo/glice/bellblack.png"
+			snooze=0
 	penultimobg=os.popen(valuepenultimo).read() #penultima lettura glucosio
 	delta=int(ultimobg)-int(penultimobg) #calcolo differenza ultima e penultima lettura
 	if delta>=0: #aggiungi di un + se differenza positiva
@@ -92,17 +123,22 @@ def glice():
 	else:
 		imgcur.value="/home/matteo/glice/arrowblack.png"
 
-	return [snooze, alarm] #mando le varibili globali
+	return [snooze, alarm, alarmon, lastalarm, delay] #rimando le varibili globali
+
+def suona(): #implementare una riproduzione di un suono
+	pass
 
 def button1(): #snooze
 	global snooze
 	global alarm
+	global delay
 	if alarm==0:
-		pass
+		delay=300
 	else:
-		imgalarm.value=f"/home/matteo/glice/bellsnooze.png"
+		imgalarm.value="/home/matteo/glice/bellsnooze.png"
+		delay=1800
 		snooze=1
-	return [snooze, alarm]
+	return [snooze, alarm,delay]
 
 def button2(): #bottone di uscita
 	quit()

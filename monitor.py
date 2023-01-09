@@ -12,6 +12,9 @@ valueultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token
 valuepenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==2{print $1; exit}'"
 oralinux='date +"%s"'
 
+user="matteo"
+folder="glice"
+
 delay=300
 snooze=0
 alarm=0
@@ -60,13 +63,11 @@ def glice():
 			alarmon=os.popen(oralinux).read()
 			lastalarm=os.popen(oralinux).read()
 			suona()
-			print("prima suonata")
 		elif alarm==1 and (int(lastbg)>=180 or int(lastbg)<70):
 			diffalarm=int(adesso)-int(lastalarm)
 			if int(diffalarm)>delay:
 				suona()
 				lastalarm=os.popen(oralinux).read()
-				print("seconda suonata")
 			else:
 				pass
 		else:
@@ -79,20 +80,20 @@ def glice():
 			lastbggui.text_color=f"yellow"
 			alarm=1
 			if snooze==1:
-				imgalarm.value="/home/matteo/glice/bellsnooze.png"
+				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
 			else:
-				imgalarm.value="/home/matteo/glice/bell.png"
+				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		elif int(lastbg)<70:
 			alarm=1
-			lastbggui.text_color="red"
+			lastbggui.text_color=f"red"
 			if snooze==1:
-				imgalarm.value="/home/matteo/glice/bellsnooze.png"
+				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
 			else:
-				imgalarm.value="/home/matteo/glice/bell.png"
+				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		else:
 			alarm=0
 			lastbggui.text_color=f"green"
-			imgalarm.value=f"/home/matteo/glice/bellblack.png"
+			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
 			snooze=0
 	penultimobg=os.popen(valuepenultimo).read() #penultima lettura glucosio
 	delta=int(ultimobg)-int(penultimobg) #calcolo differenza ultima e penultima lettura
@@ -107,21 +108,21 @@ def glice():
 	lastbggui.value=f"{lastbg}"
 	lastdeltagui.value=f"{lastdelta}"
 	if int(delta)>=-5 and int(delta)<=5:
-		imgcur.value=f"/home/matteo/glice/stable.png"
+		imgcur.value=f"/home/{user}/{folder}/stable.png"
 	elif int(delta)>5 and int(delta)<=10:
-		imgcur.value="/home/matteo/glice/up.png"
+		imgcur.value=f"/home/{user}/{folder}/up.png"
 	elif int(delta)>10 and int(delta)<=19:
-		imgcur.value="/home/matteo/glice/upup.png"
+		imgcur.value=f"/home/{user}/{folder}/upup.png"
 	elif int(delta)>19:
-		imgcur.value="/home/matteo/glice/upupup.png"
+		imgcur.value=f"/home/{user}/{folder}/upupup.png"
 	elif int(delta)<-5 and int(delta)>=-10:
-		imgcur.value="/home/matteo/glice/down.png"
+		imgcur.value=f"/home/{user}/{folder}/down.png"
 	elif int(delta)<-10 and int(delta)>=-19:
-		imgcur.value="/home/matteo/glice/downdown.png"
+		imgcur.value=f"/home/{user}/{folder}/downdown.png"
 	elif int(delta)<-19:
-		imgcur.value="/home/matteo/glice/downdowndown.png"
+		imgcur.value=f"/home/{user}/{folder}/downdowndown.png"
 	else:
-		imgcur.value="/home/matteo/glice/arrowblack.png"
+		imgcur.value=f"/home/{user}/{folder}/arrowblack.png"
 
 	return [snooze, alarm, alarmon, lastalarm, delay] #rimando le varibili globali
 
@@ -135,7 +136,7 @@ def button1(): #snooze
 	if alarm==0:
 		delay=300
 	else:
-		imgalarm.value="/home/matteo/glice/bellsnooze.png"
+		imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
 		delay=1800
 		snooze=1
 	return [snooze, alarm,delay]

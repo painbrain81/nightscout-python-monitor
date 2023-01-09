@@ -8,6 +8,17 @@ import time
 
 user="matteo"
 folder="nightscout-python-monitor"
+lvlup=180 #livello alta glicemia
+lvldown=70 #livello bassa glicemia
+sogliap1=5 #stabile
+sogliap2=10 #leggera salita
+sogliap3=19 #salita e salita rapida
+sogliam1=-5 #stabile
+sogliam2=-10 #leggera discesa
+sogliam3=-19 #discesa e discesa rapida
+ritardobg=15 #soglia oltre la quale sparisce il valore di glicemia
+minutioralegale=60 #60 per ora solare, 120 per ora legale
+refresh=5000 #in millisecondi
 
 app = App(title="app", bg="black")
 app.full_screen = True
@@ -20,7 +31,7 @@ valueultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token
 valuepenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==2{print $1; exit}'"
 oralinux='date +"%s"'
 
-#azzeramento parametri globali
+#inizializzazione parametri globali
 
 delay=300
 snooze=0
@@ -37,15 +48,15 @@ def glice():
 	global delay
 
 #	orario attuale e minuti da ultima lettura
-
+	print("----------")
 	ultimo=os.popen(tsultimo).read() #timestamp ultima lettura
 
 	nowraw=datetime.now() #timestamp standard di adesso
 	now=nowraw.strftime("%Y-%m-%dT%H:%M:%SZ") #timestamp con Z di adesso
 	time=nowraw.strftime("%H:%M") #ora e minuti attuali in formato TS
 	orario=f"{time}" #stringa con ora attuale
-
-	diff=((p.parse(now)-p.parse(ultimo)).total_seconds()/60)-60 #differenza tra adesso e ultima lettua (con Z)
+	print("orario "+orario)
+	diff=((p.parse(now)-p.parse(ultimo)).total_seconds()/60)-minutioralegale #differenza tra adesso e ultima lettua (con Z)
 
 	if int(diff)==0: #creazione stringa dei minuti trascorsi da ultima lettura
 		lastage=f"adesso"
@@ -55,25 +66,29 @@ def glice():
 	else:
 		intdiff=int(diff)
 		lastage=f"{intdiff} minuti fa"
-
+	print(lastage)
 #	valore di glucosio e delta con precedente
 
 	ultimobg=int(os.popen(valueultimo).read()) #ultima lettura glucosio
-	if int(diff)>15:
+	print("lastbg "+str(ultimobg))
+	if int(diff)>ritardobg:
 		lastbg=f"---"
+		print("ultimo valore oltre 15 min")
 		lastbggui.text_color="gray"
 	else:
 		lastbg=f"{ultimobg}" #stringra ultima lettura glucosio
 
 		adesso=os.popen(oralinux).read() #il prossimo if è la gestione del delay degli allarmi
-		if alarm==0 and (int(lastbg)>=180 or int(lastbg)<70):
+		if alarm==0 and (int(lastbg)>=lvlup or int(lastbg)<lvldown):
 			alarmon=os.popen(oralinux).read()
 			lastalarm=os.popen(oralinux).read()
 			suona()
-		elif alarm==1 and (int(lastbg)>=180 or int(lastbg)<70):
+			print("attivazione sirena")
+		elif alarm==1 and (int(lastbg)>=lvlup or int(lastbg)<lvldown):
 			diffalarm=int(adesso)-int(lastalarm)
 			if int(diffalarm)>delay:
 				suona()
+				print("ripetizione sirena")
 				lastalarm=os.popen(oralinux).read()
 			else:
 				pass
@@ -81,16 +96,19 @@ def glice():
 			alarmon=0
 			lastalarm=0
 			delay=300
+			print("spegnimento allarme")
 
-		if int(lastbg)>=180: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
+		if int(lastbg)>=lvlup: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
 			lastbggui.text_color=f"yellow"
 			alarm=1
+			print("allarme attivo high")
 			if snooze==1:
 				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
 			else:
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
-		elif int(lastbg)<70:
+		elif int(lastbg)<lvldown:
 			alarm=1
+			print("allarme attivo low")
 			lastbggui.text_color=f"red"
 			if snooze==1:
 				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
@@ -98,6 +116,7 @@ def glice():
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		else:
 			alarm=0
+			print("allarme disattivato")
 			lastbggui.text_color=f"green"
 			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
 			snooze=0
@@ -106,33 +125,44 @@ def glice():
 	if delta>=0: #aggiungi di un + se differenza positiva
 		delta=f"+{delta}"
 	lastdelta=f"{delta}" #stringa valore di differenza
-
+	print("delta "+lastdelta)
 #	dichiarazioni per GUI (valori e immagini)
 
 	diffgui.value=f"{lastage}"
 	timegui.value=f"{orario}"
 	lastbggui.value=f"{lastbg}"
 	lastdeltagui.value=f"{lastdelta}"
-	if int(delta)>=-5 and int(delta)<=5:
+	if int(delta)>=sogliam1 and int(delta)<=sogliap1:
 		imgcur.value=f"/home/{user}/{folder}/stable.png"
-	elif int(delta)>5 and int(delta)<=10:
+		print("stabile")
+	elif int(delta)>sogliap1 and int(delta)<=sogliap2:
 		imgcur.value=f"/home/{user}/{folder}/up.png"
-	elif int(delta)>10 and int(delta)<=19:
+		print("up")
+	elif int(delta)>sogliap2 and int(delta)<=sogliap3:
 		imgcur.value=f"/home/{user}/{folder}/upup.png"
-	elif int(delta)>19:
+		print("upup")
+	elif int(delta)>sogliap3:
 		imgcur.value=f"/home/{user}/{folder}/upupup.png"
-	elif int(delta)<-5 and int(delta)>=-10:
+		print("upupup")
+	elif int(delta)<sogliam1 and int(delta)>=sogliam2:
 		imgcur.value=f"/home/{user}/{folder}/down.png"
-	elif int(delta)<-10 and int(delta)>=-19:
+		print("down")
+	elif int(delta)<sogliam2 and int(delta)>=sogliam3:
 		imgcur.value=f"/home/{user}/{folder}/downdown.png"
-	elif int(delta)<-19:
+		print("downdown")
+	elif int(delta)<sogliam3:
 		imgcur.value=f"/home/{user}/{folder}/downdowndown.png"
+		print("downdowndown")
 	else:
 		imgcur.value=f"/home/{user}/{folder}/arrowblack.png"
+		print("freccia nera")
 
-	return [snooze, alarm, alarmon, lastalarm, delay] #rimando le varibili globali
+	print("delay "+str(delay))
+	print("finito")
+	return [snooze, alarm, alarmon, lastalarm, delay] #restituisco le varibili globali
 
 def suona(): #implementare una riproduzione di un suono
+	print("sirena!")
 	pass
 
 def button1(): #snooze
@@ -141,16 +171,19 @@ def button1(): #snooze
 	global delay
 	if alarm==0:
 		delay=300
+		print("snooze senza allarmi")
 	else:
 		imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
 		delay=1800
 		snooze=1
+		print("snooze attivo")
 	return [snooze, alarm,delay]
 
 def button2(): #bottone di uscita
+	print("uscita")
 	quit()
 
-app.repeat(5000, glice)
+app.repeat(refresh, glice)
 
 #blocco glicemia, freccia e delta
 
@@ -180,6 +213,5 @@ button2.bg = "gray"
 button1.text_size = 40
 button2.text_size = 40
 
-#glice()
 app.display()
 

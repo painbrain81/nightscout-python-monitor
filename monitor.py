@@ -4,16 +4,23 @@ import dateutil.parser as p
 import os
 import time
 
+#parametrizzazione principale
+
+user="matteo"
+folder="glice"
+
 app = App(title="app", bg="black")
 app.full_screen = True
+
+#sostituire HOST e TOKEN con i propri del proprio nightscout
+
 tsultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $1}' | awk 'NR==1{print $1; exit}' | cut -c2- | sed 's/.$//'"
 tspenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $1}' | awk 'NR==2{print $1; exit}' | cut -c2- | sed 's/.$//'"
 valueultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==1{print $1; exit}'"
 valuepenultimo="curl -sX GET \"https://HOST-NIGHTSCOUT/api/v1/entries?count=2&token=TOKEN\" | awk '{print $3}' | awk 'NR==2{print $1; exit}'"
 oralinux='date +"%s"'
 
-user="matteo"
-folder="glice"
+#azzeramento parametri globali
 
 delay=300
 snooze=0

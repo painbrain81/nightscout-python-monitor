@@ -23,7 +23,7 @@ Foto3: monitor con allarme silenziato
 
 ![Screenshot](screenshot4.png)
 
-Foto3: vecchia versione
+Foto3: prototipo reale (con vecchia versione)
 
 ![Screenshot](screenshot2.png)
 

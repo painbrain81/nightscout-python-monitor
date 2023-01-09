@@ -48,14 +48,14 @@ def glice():
 	global delay
 
 #	orario attuale e minuti da ultima lettura
-	print("----------")
+#	print("----------")
 	ultimo=os.popen(tsultimo).read() #timestamp ultima lettura
 
 	nowraw=datetime.now() #timestamp standard di adesso
 	now=nowraw.strftime("%Y-%m-%dT%H:%M:%SZ") #timestamp con Z di adesso
 	time=nowraw.strftime("%H:%M") #ora e minuti attuali in formato TS
 	orario=f"{time}" #stringa con ora attuale
-	print("orario "+orario)
+#	print("orario "+orario)
 	diff=((p.parse(now)-p.parse(ultimo)).total_seconds()/60)-minutioralegale #differenza tra adesso e ultima lettua (con Z)
 
 	if int(diff)==0: #creazione stringa dei minuti trascorsi da ultima lettura
@@ -66,29 +66,29 @@ def glice():
 	else:
 		intdiff=int(diff)
 		lastage=f"{intdiff} minuti fa"
-	print(lastage)
+#	print(lastage)
 #	valore di glucosio e delta con precedente
 
 	ultimobg=int(os.popen(valueultimo).read()) #ultima lettura glucosio
-	print("lastbg "+str(ultimobg))
+#	print("lastbg "+str(ultimobg))
 	if int(diff)>ritardobg:
 		lastbg=f"---"
-		print("ultimo valore oltre 15 min")
+#		print("ultimo valore oltre 15 min")
 		lastbggui.text_color="gray"
 	else:
 		lastbg=f"{ultimobg}" #stringra ultima lettura glucosio
 
-		adesso=os.popen(oralinux).read() #il prossimo if è la gestione del delay degli allarmi
+		adesso=os.popen(oralinux).read() #il prossimo if è la gestione del delay degli allarmi e l'avvio della sirena
 		if alarm==0 and (int(lastbg)>=lvlup or int(lastbg)<lvldown):
 			alarmon=os.popen(oralinux).read()
 			lastalarm=os.popen(oralinux).read()
 			suona()
-			print("attivazione sirena")
+#			print("attivazione sirena")
 		elif alarm==1 and (int(lastbg)>=lvlup or int(lastbg)<lvldown):
 			diffalarm=int(adesso)-int(lastalarm)
 			if int(diffalarm)>delay:
 				suona()
-				print("ripetizione sirena")
+#				print("ripetizione sirena")
 				lastalarm=os.popen(oralinux).read()
 			else:
 				pass
@@ -96,19 +96,19 @@ def glice():
 			alarmon=0
 			lastalarm=0
 			delay=300
-			print("spegnimento allarme")
+#			print("spegnimento sirena")
 
 		if int(lastbg)>=lvlup: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
 			lastbggui.text_color=f"yellow"
 			alarm=1
-			print("allarme attivo high")
+#			print("allarme attivo high")
 			if snooze==1:
 				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
 			else:
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		elif int(lastbg)<lvldown:
 			alarm=1
-			print("allarme attivo low")
+#			print("allarme attivo low")
 			lastbggui.text_color=f"red"
 			if snooze==1:
 				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
@@ -116,7 +116,7 @@ def glice():
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		else:
 			alarm=0
-			print("allarme disattivato")
+#			print("allarme disattivato")
 			lastbggui.text_color=f"green"
 			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
 			snooze=0
@@ -125,7 +125,8 @@ def glice():
 	if delta>=0: #aggiungi di un + se differenza positiva
 		delta=f"+{delta}"
 	lastdelta=f"{delta}" #stringa valore di differenza
-	print("delta "+lastdelta)
+#	print("delta "+lastdelta)
+
 #	dichiarazioni per GUI (valori e immagini)
 
 	diffgui.value=f"{lastage}"
@@ -134,31 +135,31 @@ def glice():
 	lastdeltagui.value=f"{lastdelta}"
 	if int(delta)>=sogliam1 and int(delta)<=sogliap1:
 		imgcur.value=f"/home/{user}/{folder}/stable.png"
-		print("stabile")
+#		print("stabile")
 	elif int(delta)>sogliap1 and int(delta)<=sogliap2:
 		imgcur.value=f"/home/{user}/{folder}/up.png"
-		print("up")
+#		print("up")
 	elif int(delta)>sogliap2 and int(delta)<=sogliap3:
 		imgcur.value=f"/home/{user}/{folder}/upup.png"
-		print("upup")
+#		print("upup")
 	elif int(delta)>sogliap3:
 		imgcur.value=f"/home/{user}/{folder}/upupup.png"
-		print("upupup")
+#		print("upupup")
 	elif int(delta)<sogliam1 and int(delta)>=sogliam2:
 		imgcur.value=f"/home/{user}/{folder}/down.png"
-		print("down")
+#		print("down")
 	elif int(delta)<sogliam2 and int(delta)>=sogliam3:
 		imgcur.value=f"/home/{user}/{folder}/downdown.png"
-		print("downdown")
+#		print("downdown")
 	elif int(delta)<sogliam3:
 		imgcur.value=f"/home/{user}/{folder}/downdowndown.png"
-		print("downdowndown")
+#		print("downdowndown")
 	else:
 		imgcur.value=f"/home/{user}/{folder}/arrowblack.png"
-		print("freccia nera")
+#		print("freccia nera")
 
-	print("delay "+str(delay))
-	print("finito")
+#	print("delay "+str(delay))
+#	print("finito")
 	return [snooze, alarm, alarmon, lastalarm, delay] #restituisco le varibili globali
 
 def suona(): #implementare una riproduzione di un suono
@@ -171,16 +172,16 @@ def button1(): #snooze
 	global delay
 	if alarm==0:
 		delay=300
-		print("snooze senza allarmi")
+#		print("snooze senza allarmi")
 	else:
 		imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
 		delay=1800
 		snooze=1
-		print("snooze attivo")
+#		print("snooze attivo")
 	return [snooze, alarm,delay]
 
 def button2(): #bottone di uscita
-	print("uscita")
+#	print("uscita")
 	quit()
 
 app.repeat(refresh, glice)

@@ -20,7 +20,7 @@ PS: per adesso gli allarmi NON suonano perchè sto cercando una soluzione smart 
 
 Foto1: nuova versione in fase di sviluppo
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot1.png)
 
 Foto2: monitor con allarme
 

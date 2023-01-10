@@ -6,16 +6,16 @@ import time
 
 #parametrizzazione principale
 
-user="matteo"
-folder="nightscout-python-monitor"
+user="matteo" #utente di sistema dove risiede il programma
+folder="nightscout-python-monitor" #cartella dove risiede il programma, necessariamente nella root dell'utente
 lvlup=180 #livello alta glicemia
 lvldown=70 #livello bassa glicemia
-sogliap1=5 #stabile
-sogliap2=10 #leggera salita
-sogliap3=19 #salita e salita rapida
-sogliam1=-5 #stabile
-sogliam2=-10 #leggera discesa
-sogliam3=-19 #discesa e discesa rapida
+sogliap1=5 #soglia max stabile
+sogliap2=10 #soglia max leggera salita
+sogliap3=19 #soglia max salita e oltre è salita rapida
+sogliam1=-5 #soglia minima stabile
+sogliam2=-10 #soglia minima leggera discesa
+sogliam3=-19 #soglia minima discesa e oltre è discesa rapida
 ritardobg=15 #soglia oltre la quale sparisce il valore di glicemia
 minutioralegale=60 #60 per ora solare, 120 per ora legale
 refresh=5000 #in millisecondi
@@ -48,7 +48,7 @@ def glice():
 	global delay
 
 #	orario attuale e minuti da ultima lettura
-#	print("----------")
+
 	ultimo=os.popen(tsultimo).read() #timestamp ultima lettura
 
 	nowraw=datetime.now() #timestamp standard di adesso
@@ -67,6 +67,7 @@ def glice():
 		intdiff=int(diff)
 		lastage=f"{intdiff} minuti fa"
 #	print(lastage)
+
 #	valore di glucosio e delta con precedente
 
 	ultimobg=int(os.popen(valueultimo).read()) #ultima lettura glucosio
@@ -76,7 +77,7 @@ def glice():
 #		print("ultimo valore oltre 15 min")
 		lastbggui.text_color="gray"
 	else:
-		lastbg=f"{ultimobg}" #stringra ultima lettura glucosio
+		lastbg=f"{ultimobg}" #stringa ultima lettura glucosio
 
 		adesso=os.popen(oralinux).read() #il prossimo if è la gestione del delay degli allarmi e l'avvio della sirena
 		if alarm==0 and (int(lastbg)>=lvlup or int(lastbg)<lvldown):
@@ -101,6 +102,7 @@ def glice():
 		if int(lastbg)>=lvlup: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
 			lastbggui.text_color=f"yellow"
 			alarm=1
+			button1.text="Silenzia"
 #			print("allarme attivo high")
 			if snooze==1:
 				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
@@ -108,6 +110,7 @@ def glice():
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		elif int(lastbg)<lvldown:
 			alarm=1
+			button1.text="Silenzia"
 #			print("allarme attivo low")
 			lastbggui.text_color=f"red"
 			if snooze==1:
@@ -116,6 +119,7 @@ def glice():
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		else:
 			alarm=0
+			button1.text="Tutto OK"
 #			print("allarme disattivato")
 			lastbggui.text_color=f"green"
 			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
@@ -159,10 +163,10 @@ def glice():
 #		print("freccia nera")
 
 #	print("delay "+str(delay))
-#	print("finito")
+
 	return [snooze, alarm, alarmon, lastalarm, delay] #restituisco le varibili globali
 
-def suona(): #implementare una riproduzione di un suono
+def suona(): #DA FARE
 	print("sirena!")
 	pass
 
@@ -206,7 +210,8 @@ diffgui = Text(timebox, text="", color="white", size=30, grid=[2,1])
 #blocco pulsanti
 
 buttonbox=Box(app, width="fill",  align="bottom")
-button1 = PushButton(buttonbox, text="Silenzia", command=button1, align="left")
+#button1 = PushButton(buttonbox, text="Silenzia", command=button1, align="left")
+button1 = PushButton(buttonbox, command=button1, align="left")
 imgalarm =Picture(buttonbox, align="left")
 button2 = PushButton(buttonbox, text="X", command=button2, align="right")
 button1.bg = "white"
@@ -214,5 +219,6 @@ button2.bg = "gray"
 button1.text_size = 40
 button2.text_size = 40
 
-app.display()
+#avvio interfaccia grafica
 
+app.display()

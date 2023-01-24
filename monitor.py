@@ -7,7 +7,7 @@ import time
 #parametrizzazione principale
 
 user="matteo" #utente di sistema dove risiede il programma
-folder="nightscout-python-monitor" #cartella dove risiede il programma, necessariamente nella root dell'utente
+folder="glice" #cartella dove risiede il programma, necessariamente nella root dell'utente
 lvlup=180 #livello alta glicemia
 lvldown=70 #livello bassa glicemia
 sogliap1=5 #soglia max stabile
@@ -18,7 +18,8 @@ sogliam2=-10 #soglia minima leggera discesa
 sogliam3=-19 #soglia minima discesa e oltre è discesa rapida
 ritardobg=15 #soglia oltre la quale sparisce il valore di glicemia
 minutioralegale=60 #60 per ora solare, 120 per ora legale
-refresh=5000 #in millisecondi
+refresh=10000 #in millisecondi
+tastoexit=False #visibilità o meno del tasto di uscita
 
 app = App(title="app", bg="black")
 app.full_screen = True
@@ -58,6 +59,7 @@ def glice():
 #	print("orario "+orario)
 	diff=((p.parse(now)-p.parse(ultimo)).total_seconds()/60)-minutioralegale #differenza tra adesso e ultima lettua (con Z)
 
+#	print(ultimo)
 	if int(diff)==0: #creazione stringa dei minuti trascorsi da ultima lettura
 		lastage=f"adesso"
 	elif int(diff)==1:
@@ -72,7 +74,8 @@ def glice():
 
 	ultimobg=int(os.popen(valueultimo).read()) #ultima lettura glucosio
 #	print("lastbg "+str(ultimobg))
-	if int(diff)>ritardobg:
+
+	if int(diff)>ritardobg: #ultima lettura oltre il tempo limite
 		lastbg=f"---"
 #		print("ultimo valore oltre 15 min")
 		lastbggui.text_color="gray"
@@ -102,7 +105,7 @@ def glice():
 		if int(lastbg)>=lvlup: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
 			lastbggui.text_color=f"yellow"
 			alarm=1
-			button1.text="Silenzia"
+			button1.visible=True
 #			print("allarme attivo high")
 			if snooze==1:
 				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
@@ -110,7 +113,7 @@ def glice():
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		elif int(lastbg)<lvldown:
 			alarm=1
-			button1.text="Silenzia"
+			button1.visible=True
 #			print("allarme attivo low")
 			lastbggui.text_color=f"red"
 			if snooze==1:
@@ -119,16 +122,23 @@ def glice():
 				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		else:
 			alarm=0
-			button1.text="Tutto OK"
+			button1.visible=False
 #			print("allarme disattivato")
 			lastbggui.text_color=f"green"
 			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
 			snooze=0
 	penultimobg=os.popen(valuepenultimo).read() #penultima lettura glucosio
-	delta=int(ultimobg)-int(penultimobg) #calcolo differenza ultima e penultima lettura
-	if delta>=0: #aggiungi di un + se differenza positiva
-		delta=f"+{delta}"
-	lastdelta=f"{delta}" #stringa valore di differenza
+	if int(diff)>ritardobg: #ultima lettura oltre il tempo limite
+		button1.visible=False
+		lastdelta="--"
+		delta="--"
+		lastdeltagui.text_color="gray"
+	else:
+		delta=int(ultimobg)-int(penultimobg) #calcolo differenza ultima e penultima lettura
+		if delta>=0: #aggiungi di un + se differenza positiva
+			delta=f"+{delta}"
+		lastdelta=f"{delta}" #stringa valore di differenza
+		lastdeltagui.text_color="white"
 #	print("delta "+lastdelta)
 
 #	dichiarazioni per GUI (valori e immagini)
@@ -137,7 +147,10 @@ def glice():
 	timegui.value=f"{orario}"
 	lastbggui.value=f"{lastbg}"
 	lastdeltagui.value=f"{lastdelta}"
-	if int(delta)>=sogliam1 and int(delta)<=sogliap1:
+	if delta=="--":
+		imgcur.value=f"/home/{user}/{folder}/arrowblack.png"
+#		print("freccia nera")
+	elif int(delta)>=sogliam1 and int(delta)<=sogliap1:
 		imgcur.value=f"/home/{user}/{folder}/stable.png"
 #		print("stabile")
 	elif int(delta)>sogliap1 and int(delta)<=sogliap2:
@@ -160,7 +173,6 @@ def glice():
 #		print("downdowndown")
 	else:
 		imgcur.value=f"/home/{user}/{folder}/arrowblack.png"
-#		print("freccia nera")
 
 #	print("delay "+str(delay))
 
@@ -203,9 +215,9 @@ lastdeltagui = Text(bgbox, text="", color="white", size=50, grid=[4,0])
 
 timebox=Box(app, align="top", layout="grid")
 space2 = Text(timebox, text="spazio", grid=[0,0], size=10)
-timegui = Text(timebox, text="", color="white", size=60, grid=[0,1])
+timegui = Text(timebox, text="", color="gray", size=60, grid=[0,1])
 space3 =Text(timebox, text="spazio", grid=[1,1], size=20)
-diffgui = Text(timebox, text="", color="white", size=30, grid=[2,1])
+diffgui = Text(timebox, text="", color="gray", size=30, grid=[2,1])
 
 #blocco pulsanti
 
@@ -214,11 +226,14 @@ buttonbox=Box(app, width="fill",  align="bottom")
 button1 = PushButton(buttonbox, command=button1, align="left")
 imgalarm =Picture(buttonbox, align="left")
 button2 = PushButton(buttonbox, text="X", command=button2, align="right")
-button1.bg = "white"
+button2.visible=tastoexit #tasto di uscita per debug
 button2.bg = "gray"
+button1.bg = "gray"
+button1.text="Silenzia"
 button1.text_size = 40
 button2.text_size = 40
 
 #avvio interfaccia grafica
 
+glice()
 app.display()

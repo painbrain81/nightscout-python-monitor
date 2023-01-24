@@ -39,4 +39,3 @@ Foto4: monitor con valori oltre il tempo massimo impostato
 Foto5: prototipo reale
 
 ![Screenshot](screenshot2.png)
-

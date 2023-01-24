@@ -14,7 +14,9 @@ Nel file monitor.py bisogna mettere HOST-NIGHTSCOUT e TOKEN relativi al proprio 
 
 L'impaginazione è adeguata per un monitor con risoluzione 800x480.
 
-Il tasto silenzia, se attivo, fa suonare gli allarmi ogni 30 minuti. Sennò suona ogni 5 finchè i valori non tornano in range.
+Il tasto silenzia è attivo se compare un allarme e fa suonare gli allarmi ogni 30 minuti. Se invece viene premuto suona ogni 5 finchè i valori non tornano in range.
+La visualizzazione del tasto per uscire è impostabile dai parametri globali.
+Se i valori sono più vecchi di 15 minuti (impostabile nei parametri) le scritte diventano tutti trattini e di colore grigio. Si ripristina da solo al primo valore disponibile più recente.
 
 PS: per adesso gli allarmi NON suonano perchè sto cercando una soluzione smart per "dare voce" al raspberry (mini speaker penso).
 
@@ -30,7 +32,11 @@ Foto3: monitor con allarme silenziato
 
 ![Screenshot](screenshot4.png)
 
-Foto3: prototipo reale (con vecchia versione)
+Foto4: monitor con valori oltre il tempo massimo impostato
+
+![Screenshot](screenshot5.png)
+
+Foto5: prototipo reale
 
 ![Screenshot](screenshot2.png)
 

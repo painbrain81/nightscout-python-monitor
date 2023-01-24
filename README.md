@@ -36,6 +36,10 @@ Foto4: monitor con valori oltre il tempo massimo impostato
 
 ![Screenshot](screenshot5.png)
 
-Foto5: prototipo reale
+Foto5: prototipo reale (fronte)
 
-![Screenshot](screenshot2.png)
+![Screenshot](screenshot2.jpg)
+
+Foto6: prototipo reale (retro)
+
+![Screenshot](screenshot2bis.jpg)

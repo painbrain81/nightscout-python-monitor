@@ -20,6 +20,8 @@ ritardobg=15 #soglia oltre la quale sparisce il valore di glicemia
 minutioralegale=60 #60 per ora solare, 120 per ora legale
 refresh=10000 #in millisecondi
 tastoexit=False #visibilità o meno del tasto di uscita
+delayshort=180 #tempo minimo tra gli allarmi
+delaylong=1800 #tempo massimo tra gli allarmi dopo lo snooze
 
 app = App(title="app", bg="black")
 app.full_screen = True
@@ -34,11 +36,12 @@ oralinux='date +"%s"'
 
 #inizializzazione parametri globali
 
-delay=300
+delay=delayshort
 snooze=0
 alarm=0
 alarmon=0
 lastalarm=0
+mute=0
 
 def glice():
 
@@ -47,6 +50,8 @@ def glice():
 	global alarmon
 	global lastalarm
 	global delay
+	global delayshort
+	global mute
 
 #	orario attuale e minuti da ultima lettura
 
@@ -99,13 +104,14 @@ def glice():
 		else:
 			alarmon=0
 			lastalarm=0
-			delay=300
+			delay=delayshort
 #			print("spegnimento sirena")
 
 		if int(lastbg)>=lvlup: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
 			lastbggui.text_color=f"yellow"
 			alarm=1
 			button1.visible=True
+			imgalarm.visible=True
 #			print("allarme attivo high")
 			if snooze==1:
 				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
@@ -114,6 +120,7 @@ def glice():
 		elif int(lastbg)<lvldown:
 			alarm=1
 			button1.visible=True
+			imgalarm.visible=True
 #			print("allarme attivo low")
 			lastbggui.text_color=f"red"
 			if snooze==1:
@@ -123,6 +130,7 @@ def glice():
 		else:
 			alarm=0
 			button1.visible=False
+			imgalarm.visible=False
 #			print("allarme disattivato")
 			lastbggui.text_color=f"green"
 			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
@@ -130,6 +138,7 @@ def glice():
 	penultimobg=os.popen(valuepenultimo).read() #penultima lettura glucosio
 	if int(diff)>ritardobg: #ultima lettura oltre il tempo limite
 		button1.visible=False
+		imgalarm.visible=False
 		lastdelta="--"
 		delta="--"
 		lastdeltagui.text_color="gray"
@@ -176,22 +185,29 @@ def glice():
 
 #	print("delay "+str(delay))
 
-	return [snooze, alarm, alarmon, lastalarm, delay] #restituisco le varibili globali
+	return [snooze, alarm, alarmon, lastalarm, delay, mute] #restituisco le varibili globali
 
-def suona(): #DA FARE
-	print("sirena!")
-	pass
+def suona(): #sirena
+	global mute
+	alarmcmd=f"aplay /home/{user}/{folder}/ding.wav"
+	if mute==1:
+		pass
+	else:
+#		print("sirena")
+		os.popen(alarmcmd)
 
 def button1(): #snooze
 	global snooze
 	global alarm
 	global delay
+	global delaylong
+	global delayshort
 	if alarm==0:
-		delay=300
+		delay=delayshort
 #		print("snooze senza allarmi")
 	else:
 		imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
-		delay=1800
+		delay=delaylong
 		snooze=1
 #		print("snooze attivo")
 	return [snooze, alarm,delay]

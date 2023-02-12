@@ -216,6 +216,18 @@ def button2(): #bottone di uscita
 #	print("uscita")
 	quit()
 
+def button3(): #tasto muto
+	global mute
+#	print("premute mute")
+	if mute==0:
+		mute=1
+		button3.text="Muto"
+	else:
+		mute=0
+		button3.text="Suona"
+#	print(mute)
+	return mute
+
 app.repeat(refresh, glice)
 
 #blocco glicemia, freccia e delta
@@ -248,6 +260,9 @@ button1.bg = "gray"
 button1.text="Silenzia"
 button1.text_size = 40
 button2.text_size = 40
+button3 = PushButton(buttonbox, text="Suona", command=button3, align="right")
+button3.text_size = 40
+button3.bg = "gray"
 
 #avvio interfaccia grafica
 

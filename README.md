@@ -4,7 +4,7 @@ Hardware necessario un raspberry pi (almeno il 4) e un monitor gpio/hdmi da 5 po
 
 Software necessario Raspberry Pi OS.
 
-Applicazioni necessarie:
+<b>Applicazioni necessarie:</b>
 
 sudo apt-get install python3 python3-pip git python3-tk python3-dateutil
 
@@ -18,7 +18,9 @@ Il tasto silenzia è attivo se compare un allarme e fa suonare gli allarmi ogni 
 La visualizzazione del tasto per uscire è impostabile dai parametri globali.
 Se i valori sono più vecchi di 15 minuti (impostabile nei parametri) le scritte diventano tutti trattini e di colore grigio. Si ripristina da solo al primo valore disponibile più recente.
 
-Speaker:
+In basso a destra c'è il tasto Muto/Suona per spegnere completamente gli allarmi o farglieli gestire in autonomia.
+
+<b>Speaker:</b>
 piccolo inciso sullo speaker (ho preso questo: https://it.aliexpress.com/item/1005004442879029.html?spm=a2g0o.order_list.order_list_main.10.5eda36968OiFYM&gatewayAdapt=glo2ita )
 per farlo andare senza troppi sbattimenti sul raspberry aprite il file /etc/modprobe.d/raspi-blacklist.conf e ci mettete dentro "blacklist snd_bcm2835" (senza virgolette) e poi aprite il file /lib/modprobe.d/aliases.conf e commentate con un # davanti la riga con scritto "options snd-usb-audio index=-2" (anche qui senza virgolette) e poi riavviate il rapsberry. Praticamente così facendo escludete tutti gli audio integrati e lasciate attivo e predefinito solo lo speaker usb.
 

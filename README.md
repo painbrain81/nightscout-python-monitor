@@ -3,17 +3,17 @@
 # nightscout-python-monitor
 Un monitor che mostra la glicemia da nightscout in python che si basa GUIZero. 
 Hardware necessario un raspberry pi (almeno il 4) e un monitor gpio/hdmi da 5 pollici con touchscreen (questo è quello del prototipo: http://www.waveshare.com/wiki/5inch_HDMI_LCD )
-L'impaginazione è adeguata per un monitor con risoluzione 800x480.
-
-Software necessario Raspberry Pi OS.
+L'impaginazione quindi è adeguata per un monitor con risoluzione 800x480.
 
 <b>Applicazioni necessarie:</b>
+
+Sistema operativo necessario Raspberry Pi OS.
 
 sudo apt-get install python3 python3-pip git python3-tk python3-dateutil
 
 sudo pip3 install guizero
 
-<b>Dettagli</b>
+<b>Dettagli:</b>
 
 - Nel file monitor.py bisogna mettere HOST-NIGHTSCOUT e TOKEN relativi al proprio nightscout nelle prime righe nonchè il nome del proprio utente e la cartella (rigorosamente nella cartella root del proprio utente) dove risiede il programma.
 

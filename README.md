@@ -1,3 +1,5 @@
+<h2>NOTA: le foto sono della versione vecchia!</h2>
+
 # nightscout-python-monitor
 Un monitor in python che si basa su nightscout e GUIZero. 
 Hardware necessario un raspberry pi (almeno il 4) e un monitor gpio/hdmi da 5 pollici con touchscreen (questo è quello del prototipo: http://www.waveshare.com/wiki/5inch_HDMI_LCD )

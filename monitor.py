@@ -20,7 +20,7 @@ ritardobg=15 #soglia oltre la quale sparisce il valore di glicemia
 minutioralegale=60 #60 per ora solare, 120 per ora legale
 refresh=10000 #in millisecondi
 tastoexit=False #visibilità o meno del tasto di uscita
-delayshort=180 #tempo minimo tra gli allarmi
+delayshort=300 #tempo minimo tra gli allarmi
 delaylong=1800 #tempo massimo tra gli allarmi dopo lo snooze
 
 app = App(title="app", bg="black")
@@ -56,6 +56,7 @@ def glice():
 #	orario attuale e minuti da ultima lettura
 
 	ultimo=os.popen(tsultimo).read() #timestamp ultima lettura
+#	imgalarm.visible=False
 
 	nowraw=datetime.now() #timestamp standard di adesso
 	now=nowraw.strftime("%Y-%m-%dT%H:%M:%SZ") #timestamp con Z di adesso
@@ -82,7 +83,7 @@ def glice():
 
 	if int(diff)>ritardobg: #ultima lettura oltre il tempo limite
 		lastbg=f"---"
-#		print("ultimo valore oltre 15 min")
+		print("ultimo valore oltre 15 min")
 		lastbggui.text_color="gray"
 	else:
 		lastbg=f"{ultimobg}" #stringa ultima lettura glucosio
@@ -92,12 +93,12 @@ def glice():
 			alarmon=os.popen(oralinux).read()
 			lastalarm=os.popen(oralinux).read()
 			suona()
-#			print("attivazione sirena")
+			print("attivazione sirena")
 		elif alarm==1 and (int(lastbg)>=lvlup or int(lastbg)<lvldown):
 			diffalarm=int(adesso)-int(lastalarm)
 			if int(diffalarm)>delay:
 				suona()
-#				print("ripetizione sirena")
+				print("ripetizione sirena")
 				lastalarm=os.popen(oralinux).read()
 			else:
 				pass
@@ -105,40 +106,41 @@ def glice():
 			alarmon=0
 			lastalarm=0
 			delay=delayshort
-#			print("spegnimento sirena")
+			button1.image=f"/home/{user}/{folder}/alarm5.png"
+			print("spegnimento allarme")
 
 		if int(lastbg)>=lvlup: #se alta o bassa assegnazione colore al testo icona e gestione allarmi
 			lastbggui.text_color=f"yellow"
 			alarm=1
 			button1.visible=True
-			imgalarm.visible=True
-#			print("allarme attivo high")
-			if snooze==1:
-				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
-			else:
-				imgalarm.value=f"/home/{user}/{folder}/bell.png"
+#			imgalarm.visible=True
+			print("allarme attivo high")
+#			if snooze==1:
+#				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
+#			else:
+#				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		elif int(lastbg)<lvldown:
 			alarm=1
 			button1.visible=True
-			imgalarm.visible=True
-#			print("allarme attivo low")
+#			imgalarm.visible=True
+			print("allarme attivo low")
 			lastbggui.text_color=f"red"
-			if snooze==1:
-				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
-			else:
-				imgalarm.value=f"/home/{user}/{folder}/bell.png"
+#			if snooze==1:
+#				imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
+#			else:
+#				imgalarm.value=f"/home/{user}/{folder}/bell.png"
 		else:
 			alarm=0
 			button1.visible=False
-			imgalarm.visible=False
-#			print("allarme disattivato")
+#			imgalarm.visible=False
+			print("allarme disattivato")
 			lastbggui.text_color=f"green"
-			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
+#			imgalarm.value=f"/home/{user}/{folder}/bellblack.png"
 			snooze=0
 	penultimobg=os.popen(valuepenultimo).read() #penultima lettura glucosio
 	if int(diff)>ritardobg: #ultima lettura oltre il tempo limite
 		button1.visible=False
-		imgalarm.visible=False
+#		imgalarm.visible=False
 		lastdelta="--"
 		delta="--"
 		lastdeltagui.text_color="gray"
@@ -193,7 +195,7 @@ def suona(): #sirena
 	if mute==1:
 		pass
 	else:
-#		print("sirena")
+		print("sirena")
 		os.popen(alarmcmd)
 
 def button1(): #snooze
@@ -204,28 +206,28 @@ def button1(): #snooze
 	global delayshort
 	if alarm==0:
 		delay=delayshort
-#		print("snooze senza allarmi")
+		print("snooze senza allarmi")
 	else:
-		imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
+#		imgalarm.value=f"/home/{user}/{folder}/bellsnooze.png"
+		button1.image=f"/home/{user}/{folder}/alarm30.png"
 		delay=delaylong
 		snooze=1
-#		print("snooze attivo")
+		print("snooze attivo")
 	return [snooze, alarm,delay]
 
 def button2(): #bottone di uscita
-#	print("uscita")
+	print("uscita")
 	quit()
 
 def button3(): #tasto muto
 	global mute
-#	print("premute mute")
+	print("premuto mute")
 	if mute==0:
 		mute=1
-		button3.text="Muto"
+		button3.image=f"/home/{user}/{folder}/mute.png"
 	else:
 		mute=0
-		button3.text="Suona"
-#	print(mute)
+		button3.image=f"/home/{user}/{folder}/nomute.png"
 	return mute
 
 app.repeat(refresh, glice)
@@ -250,17 +252,18 @@ diffgui = Text(timebox, text="", color="gray", size=30, grid=[2,1])
 #blocco pulsanti
 
 buttonbox=Box(app, width="fill",  align="bottom")
-#button1 = PushButton(buttonbox, text="Silenzia", command=button1, align="left")
 button1 = PushButton(buttonbox, command=button1, align="left")
-imgalarm =Picture(buttonbox, align="left")
+#imgalarm =Picture(buttonbox, align="left")
 button2 = PushButton(buttonbox, text="X", command=button2, align="right")
 button2.visible=tastoexit #tasto di uscita per debug
 button2.bg = "gray"
 button1.bg = "gray"
-button1.text="Silenzia"
-button1.text_size = 40
+#button1.text="Silenzia"
+button1.image=f"/home/{user}/{folder}/alarm5.png"
+#button1.text_size = 40
 button2.text_size = 40
-button3 = PushButton(buttonbox, text="Suona", command=button3, align="right")
+button3 = PushButton(buttonbox, command=button3, align="right")
+button3.image=f"/home/{user}/{folder}/nomute.png"
 button3.text_size = 40
 button3.bg = "gray"
 

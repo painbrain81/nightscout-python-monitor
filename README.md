@@ -13,7 +13,7 @@ sudo apt-get install python3 python3-pip git python3-tk python3-dateutil
 
 sudo pip3 install guizero
 
-sudo pip3 install gtts <u>---> PER LO SVILUPPO DELLA LETTURA VOCALE <---</u>
+sudo pip3 install gtts <b>---> PER LO SVILUPPO DELLA LETTURA VOCALE <---</b>
 
 <b>Dettagli:</b>
 
@@ -27,7 +27,7 @@ sudo pip3 install gtts <u>---> PER LO SVILUPPO DELLA LETTURA VOCALE <---</u>
 
 - In basso a destra c'è il tasto Muto/Suona per, rispettivamente, spegnere completamente gli allarmi o farglieli gestire in autonomia.
 
-- Lettura vocale dei valori di glucosio e della tendenza  <u>---> IN FASE DI SVILUPPO <---</u>
+- Lettura vocale dei valori di glucosio e della tendenza  <b>---> IN FASE DI SVILUPPO <---</b>
 
 <b>Speaker:</b>
 

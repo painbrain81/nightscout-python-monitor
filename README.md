@@ -25,7 +25,7 @@ sudo pip3 install guizero
 
 - In basso a destra c'è il tasto Muto/Suona per, rispettivamente, spegnere completamente gli allarmi o farglieli gestire in autonomia.
 
-- Lettura vocale dei valori di glucosio --> IN FASE DI SVILUPPO
+- Lettura vocale dei valori di glucosio <color="red">--> IN FASE DI SVILUPPO</color>
 
 <b>Speaker:</b>
 

@@ -1,4 +1,4 @@
-<h2>NOTA: le foto sono della versione vecchia!</h2>
+<h2>NOTA: le foto del prototipo sono della versione vecchia!</h2>
 
 # nightscout-python-monitor
 Un monitor che mostra la glicemia da nightscout in python che si basa GUIZero. 
@@ -36,19 +36,19 @@ Per farlo andare senza troppi sbattimenti sul raspberry aprite il file /etc/modp
 
 Foto1: monitor in funzione con valori in range
 
-![Screenshot](screenshot1.png)
+![Screenshot](foto1.png)
 
 Foto2: monitor con allarme (allarme ogni 5 minuti)
 
-![Screenshot](screenshot3.png)
+![Screenshot](foto3.png)
 
 Foto3: monitor con snooze attivato (allarme ogni 30 minuti)
 
-![Screenshot](screenshot4.png)
+![Screenshot](foto4.png)
 
-Foto4: monitor con valori oltre il tempo massimo impostato
+Foto4: monitor con valori oltre il tempo massimo impostato e allarmi impostati su muto
 
-![Screenshot](screenshot5.png)
+![Screenshot](foto5.png)
 
 Foto5: prototipo reale (fronte)
 

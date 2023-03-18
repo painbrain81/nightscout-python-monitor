@@ -1,4 +1,4 @@
-<h2>NOTA: le foto del prototipo sono della versione vecchia!</h2>
+<h2>NOTA: le foto sono di una vecchia versione! Le devo sostituire!</h2>
 
 # nightscout-python-monitor
 Un monitor che mostra la glicemia da nightscout in python che si basa GUIZero. 

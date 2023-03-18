@@ -27,7 +27,7 @@ sudo pip3 install gtts
 
 - In basso a destra c'è il tasto Muto/Suona per, rispettivamente, spegnere completamente gli allarmi o farglieli gestire in autonomia.
 
-- Lettura vocale dei valori di glucosio con tasto di mute dedicato alla sola voce  <b>---> IN FASE DI SVILUPPO <---</b>
+- Lettura vocale dei valori di glucosio con tasto di mute dedicato alla sola voce con tasto apposito per silenziare la lettura
 
 <b>Speaker:</b>
 

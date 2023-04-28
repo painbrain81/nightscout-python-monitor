@@ -47,7 +47,7 @@ alarmon=0
 lastalarm=0
 mute=0
 ultimaglice=0
-mutevoice=0
+mutevoice=1
 
 def glice():
 
